@@ -10,7 +10,7 @@ import (
 
 
 type HTTPServer struct {
-	Addr string
+	Addr string `yaml:"address" env-default:"localhost:8000"`
 }
 
 type Config struct {
