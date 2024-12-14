@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/krishkumar84/golang-project/pkg/config"
+	"github.com/krishkumar84/golang-project/pkg/http/handler/users"
 )
 
 func main() {
@@ -27,8 +28,10 @@ func main() {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World! hello m, krishkhush"))
+		w.Write([]byte("Hello from krish and server is running"))
 	})
+
+	router.HandleFunc("POST /api/users",users.New())
     
 	//start server
 
