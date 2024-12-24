@@ -28,7 +28,7 @@ func main() {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello from krish and server is running"))
+		w.Write([]byte("Hello from krish and server is running and cicd also"))
 	})
 
 	router.HandleFunc("POST /api/users",users.New())
