@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          # Navigate to your project directory
+          cd /home/ec2-user/golang-project
+          
+          # Pull the latest changes
+          git pull origin main
+          
+          # Stop the current process
+          sudo pkill main || true
+          
+          # Build the application
+          go build -o main cmd/api/main.go
+          
+          # Start the application in the background
+          nohup ./main > output.log 2>&1 &
