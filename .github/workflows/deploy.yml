@@ -24,6 +24,8 @@ jobs:
           
           # Stop the current process
           sudo pkill main || true
+          sudo fuser -k 8080/tcp || true
+          sleep 2
           
           # Build the application
           go build -o main cmd/api/main.go
