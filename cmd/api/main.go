@@ -13,15 +13,23 @@ import (
 
 	"github.com/krishkumar84/golang-project/pkg/config"
 	"github.com/krishkumar84/golang-project/pkg/http/handler/users"
+	"github.com/krishkumar84/golang-project/pkg/storage/sqlite"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
+
 	// load config
 
 	cfg := config.MustLoad()
 
-	//database
 
+	//database
+    storage,err := sqlite.New(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	slog.Info("Database connected",cfg.Env)
 
 	//setup router
 
@@ -31,7 +39,7 @@ func main() {
 		w.Write([]byte("Hello from krish and cicd and server grace full kill is running"))
 	})
 
-	router.HandleFunc("POST /api/users",users.New())
+	router.HandleFunc("POST /api/users",users.New(storage))
     
 	//start server
 

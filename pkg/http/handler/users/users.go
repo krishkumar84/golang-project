@@ -9,13 +9,14 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/krishkumar84/golang-project/pkg/storage"
 	"github.com/krishkumar84/golang-project/pkg/types"
 	"github.com/krishkumar84/golang-project/pkg/utils/response"
 )
 
 
 
-func New() http.HandlerFunc{
+func New(storage storage.Storage) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("New User Handler")
         var user types.User
@@ -37,7 +38,20 @@ func New() http.HandlerFunc{
 			return
 		}
 
-		response.WriteJson(w, http.StatusCreated, map[string]string{"status":"ok"})
+		lastId, err := storage.CreateUser(
+			user.Name,
+			user.Email,
+			user.Age,
+		)
+
+		slog.Info("User created sucessfully",slog.String("userId",fmt.Sprint(lastId)))
+
+		if err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(w, http.StatusCreated, map[string]int64{"id":lastId})
 	}
 }
 
