@@ -40,6 +40,8 @@ func main() {
 	})
 
 	router.HandleFunc("POST /api/users",users.New(storage))
+    // router.HandleFunc("GET /api/users/{id}",users.GetUser(storage))
+	// router.HandleFunc("GET /api/users",users.GetAll(storage))
     
 	//start server
 

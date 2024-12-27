@@ -28,7 +28,7 @@ jobs:
           sleep 2
           
           # Build the application
-          go build -o main cmd/api/main.go
+          CGO_ENABLED=1 go build -o main cmd/api/main.go
           
           # Start the application in the background
           nohup ./main -config config/local.yaml > output.log 2>&1 &
