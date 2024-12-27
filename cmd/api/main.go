@@ -36,7 +36,7 @@ func main() {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello krish this side  and server is up and running"))
+		w.Write([]byte("Hello krish this side  and server is up and running with cgo enabled for sqlite"))
 	})
 
 	router.HandleFunc("POST /api/users",users.New(storage))
