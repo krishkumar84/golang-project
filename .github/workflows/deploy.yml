@@ -27,6 +27,10 @@ jobs:
           sudo fuser -k 8080/tcp || true
           sleep 2
           
+          # Create storage directory and set permissions
+          mkdir -p /home/ec2-user/golang-project/storage
+          chmod 755 /home/ec2-user/golang-project/storage
+
           # Build the application
           CGO_ENABLED=1 go build -o main cmd/api/main.go
           
