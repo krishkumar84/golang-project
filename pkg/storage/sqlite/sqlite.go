@@ -5,6 +5,8 @@ import (
 
 	"github.com/krishkumar84/golang-project/pkg/config"
 	_"github.com/mattn/go-sqlite3"
+	"github.com/krishkumar84/golang-project/pkg/types"
+	"fmt"
 
 )
 
@@ -47,4 +49,45 @@ func (s *Sqlite) CreateUser(name string, email string, age int) (int64, error) {
 		return 0, err
 	}
 	return lastId, nil
+}
+
+func (s *Sqlite) GetUserById(id int64)(types.User, error){
+	stmt, err := s.Db.Prepare("SELECT id,name,email,age FROM users WHERE id = ? LIMIT 1")
+	if err != nil {
+		return types.User{}, err
+	}
+	defer stmt.Close()
+	var user types.User
+
+	err = stmt.QueryRow(id).Scan(&user.Id, &user.Name, &user.Email, &user.Age)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return types.User{}, fmt.Errorf("user not found %s",fmt.Sprint(id))
+		}
+		return types.User{}, err
+	}
+	return user, nil
+}
+
+func (s *Sqlite) GetAllUsers()([]types.User, error){
+	stmt, err := s.Db.Prepare("SELECT id,name,email,age FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var users []types.User
+	for rows.Next(){
+		var user types.User
+		err := rows.Scan(&user.Id, &user.Name, &user.Email, &user.Age)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
 }
